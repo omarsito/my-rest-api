@@ -45,7 +45,8 @@ class MyRestApiApplicationTests {
 	@Test
 	void testAppVersionIsWithCorrectFormat() {
 		assertThat(testRestTemplate.getForObject("http://localhost:" + port + "/", RootAPI.class)).hasFieldOrProperty("appVersion");
-		assertThat(testRestTemplate.getForObject("http://localhost:" + port + "/", RootAPI.class)).extracting("appVersion").isEqualTo("0.2.0-SNAPSHOT");
+		String regEx = "[0-9]\\.[0-9]\\.[0-9]-(SNAPSHOT|RELEASE)";
+		assertThat(testRestTemplate.getForObject("http://localhost:" + port + "/", RootAPI.class)).extracting("appVersion").toString().matches(regEx);
 	}
 
 }

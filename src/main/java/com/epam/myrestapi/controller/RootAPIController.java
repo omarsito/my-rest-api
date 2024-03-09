@@ -21,7 +21,8 @@ public class RootAPIController {
 
     @GetMapping("/")
     public ResponseEntity<RootAPI> getRootAPIData(){
-        return ResponseEntity.ok(new RootAPI(HttpStatus.OK.value(), Cons.OK_STATUS_MSG, appProps.getPropsValue("app.version")));
+        return ResponseEntity.ok(new RootAPI(HttpStatus.OK.value(), Cons.OK_STATUS_MSG,
+                appProps.getPropsValue("app.version"), appProps.getPropsValue("app.name")));
     }
 
 }
