@@ -40,4 +40,5 @@ steps:
   - name: 'gcr.io/cloud-builders/gcloud'
     script: |
       #!/usr/bin/env bash
+      gcloud builds triggers list --region=us-central1
       gcloud builds triggers run my-rest-api-chart-dev-trigger --region=us-central1 --branch=develop
