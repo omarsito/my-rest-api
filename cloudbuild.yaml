@@ -1,42 +1,34 @@
 steps:
-  # Maven Build for SpringBoot App
-  # Build -> clean, compile, execute JUnit tests, package & install artifact (JAR) ...
+  # Maven Build (clean, compile, execute JUnit tests, package & install artifact (JAR file)) for SpringBoot Microservice
+  # Get Artifact Version via Maven Plugin
   - name: 'gcr.io/cloud-builders/mvn'
-    args: ['clean', 'install']
-  # Get SonarQube CE Admin Token & store it on an Env Var
+    script: |
+      #!/usr/bin/env bash
+      mvn clean install
+      ARTIFACT_VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
+      IMAGE_TAG=`echo $ARTIFACT_VERSION | cut -d "-" -f1`
+      echo $IMAGE_TAG >> image-tag.txt
+  # Get SonarQube CE Admin Token & store it on a file in the workspace/
   - name: 'gcr.io/cloud-builders/gcloud'
     script: |
       #!/usr/bin/env bash
       gcloud secrets versions access 1 --secret=sonarqube-admin-token >> sonarqube-token.txt
       gcloud config get-value project >> project-id.txt
-  # Maven Build for SonarQube CE Scanning
+  # Maven Goal for SonarQube CE Scanning
   - name: 'gcr.io/cloud-builders/mvn'
     script: |
       #!/usr/bin/env bash
       SONARQUBE_TOKEN=`cat sonarqube-token.txt`
       mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=http://35.232.102.124:9000/sonarqube
-  # Get Artifact Version via Maven Plugin
-  - name: 'gcr.io/cloud-builders/mvn'
-    script: |
-      #!/usr/bin/env bash
-      ARTIFACT_VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`
-      IMAGE_TAG=`echo $ARTIFACT_VERSION | cut -d "-" -f1`
-      echo $IMAGE_TAG >> image-tag.txt
-  # Docker Build Container Image for Microservice
+  # Docker Build & Push Container Image for Microservice in GCP Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     script: |
       #!/usr/bin/env bash
       IMAGE_TAG=`cat image-tag.txt`
       PROJECT_ID=`cat project-id.txt`
       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/epam-docker-repo/my-rest-api:$IMAGE_TAG .
-  # Docker Push Container Image to Artifact Registry (Docker Repo)
-  - name: 'gcr.io/cloud-builders/docker'
-    script: |
-      #!/usr/bin/env bash
-      IMAGE_TAG=`cat image-tag.txt`
-      PROJECT_ID=`cat project-id.txt`
       docker push us-central1-docker.pkg.dev/$PROJECT_ID/epam-docker-repo/my-rest-api:$IMAGE_TAG
-  # Execute Trigger that will deploy the Helm Chart Repo on GKE
+  # Execute Trigger that will deploy the Helm 3 Chart Repo on GCP GKE Cluster
   - name: 'gcr.io/cloud-builders/gcloud'
     script: |
       #!/usr/bin/env bash
