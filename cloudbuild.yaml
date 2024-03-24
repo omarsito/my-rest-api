@@ -35,4 +35,5 @@ steps:
       #!/usr/bin/env bash
       IMAGE_TAG=`cat image-tag.txt`
       gcloud builds triggers list --region=us-central1
+      echo "Image tag value: $IMAGE_TAG"
       gcloud builds triggers run my-rest-api-chart-trigger --region=us-central1 --substitutions=_IMAGE_TAG=$IMAGE_TAG --branch=develop
