@@ -29,8 +29,10 @@ steps:
       docker build -t us-central1-docker.pkg.dev/$PROJECT_ID/epam-docker-repo/my-rest-api:$IMAGE_TAG .
       docker push us-central1-docker.pkg.dev/$PROJECT_ID/epam-docker-repo/my-rest-api:$IMAGE_TAG
   # Execute Trigger that will deploy the Helm 3 Chart Repo on GCP GKE Cluster
+  # Image tag value is sent in a user defined variable _IMAGE_TAG
   - name: 'gcr.io/cloud-builders/gcloud'
     script: |
       #!/usr/bin/env bash
       gcloud builds triggers list --region=us-central1
-      gcloud builds triggers run my-rest-api-chart-dev-trigger --region=us-central1 --branch=develop
+      IMAGE_TAG=`cat image-tag.txt`
+      gcloud builds triggers run my-rest-api-chart-dev-trigger --region=us-central1 --branch=develop --substitutions _IMAGE_TAG=$IMAGE_TAG
