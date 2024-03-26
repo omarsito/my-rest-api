@@ -1,7 +1,6 @@
-package com.epam.myrestapi.pojo;
+package com.oabraham.myrestapi.pojo;
 
 public class RootAPI {
-
     private final String statusMsg;
     private final String appVersion;
     private final int httpStatus;

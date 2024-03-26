@@ -1,4 +1,4 @@
-package com.epam.myrestapi.config;
+package com.oabraham.myrestapi.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;

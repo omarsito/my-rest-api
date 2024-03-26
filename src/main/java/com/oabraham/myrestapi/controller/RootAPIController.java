@@ -1,8 +1,8 @@
-package com.epam.myrestapi.controller;
+package com.oabraham.myrestapi.controller;
 
-import com.epam.myrestapi.config.ConfigProperties;
-import com.epam.myrestapi.pojo.RootAPI;
-import com.epam.myrestapi.util.Cons;
+import com.oabraham.myrestapi.config.ConfigProperties;
+import com.oabraham.myrestapi.util.Cons;
+import com.oabraham.myrestapi.pojo.RootAPI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

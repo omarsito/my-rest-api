@@ -1,4 +1,4 @@
-package com.epam.myrestapi;
+package com.oabraham.myrestapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
